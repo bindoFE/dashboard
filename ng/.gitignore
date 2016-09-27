@@ -1,0 +1,16 @@
+/node_modules
+/src/reducers/index.js
+/src/sagas/index.js
+/src/store/configureStore.js
+/.babelrc
+/server.js
+/webpack.config.prod.js
+/webpack.config.js
+.DS_Store
+/assets/images
+npm-debug.log
+node_modules
+dist
+_translations
+.idea
+*.py
