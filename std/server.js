@@ -12,9 +12,11 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 
 app.use(require('webpack-hot-middleware')(compiler));
+app.use(express.static('dist'));
 
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, './dist/index.html'));
+  let target = req.path.substring(1) || 'home';
+  res.send(target);
 });
 
 app.listen(3002, 'localhost', function (err) {
@@ -22,6 +24,5 @@ app.listen(3002, 'localhost', function (err) {
     console.error(err);
     return;
   }
-
   console.log('Listening at http://localhost:3002');
 });
