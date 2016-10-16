@@ -1,16 +1,18 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path')
+var webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
-  debug: false,
-  entry: [
-    'babel-polyfill',
-    './src/index'
-  ],
+var pages = [
+  { name: 'home'},
+  { name: 'login'}
+]
+var config = {
+  devtool: 'source-map',
+  entry: {},
   output: {
-    filename: 'app.[hash].js',
-    path: path.join(__dirname, 'dist')
+    path: './dist',
+    publicPath: './',
+    filename: "[name].js"
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -25,19 +27,14 @@ module.exports = {
       comments: false,
       sourceMap: false
     }),
-    new HtmlWebpackPlugin({
-      title: 'chart',
-      filename: 'index.html',
-      template: 'index.template.html'
-    })
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx', '.css']
+    extensions: ['', '.js', '.css']
   },
   module: {
     loaders: [
-      { test:   /\.css$/, loader: "style!css!postcss" },
-      { test: /\.jsx?$/, loader: 'babel', include: path.join(__dirname, 'src') },
+      { test: /(\.css$)/, loaders: ['style-loader', 'css-loader'] },
+      { test: /\.js?$/, loader: 'babel', include: path.join(__dirname) },
       {
         test: /\.woff$/,
         loader: "url-loader?limit=10000&mimetype=application/font-woff&name=[path][name].[ext]"
@@ -66,4 +63,18 @@ module.exports = {
       }
     ]
   }
-};
+}
+
+pages.forEach(page => {
+  const { name } = page;
+  config.entry[name] = `./pages/${name}.js`
+  config.plugins.push(
+    new HtmlWebpackPlugin({
+      inject: false,
+      chunks: [name],
+      filename: `${name}.html`
+    })
+  )
+})
+
+module.exports = config

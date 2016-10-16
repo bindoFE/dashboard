@@ -9,11 +9,12 @@ var pages = [
   { name: 'login'}
 ]
 var config = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: '#inline-source-map',
   entry: {},
   output: {
-    path: __dirname,
-    filename: "apps/[name]/build/bundle.js"
+    path: path.join(__dirname, './dist'),
+    publicPath: './',
+    filename: "[name].js"
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -62,12 +63,13 @@ var config = {
 }
 
 pages.forEach(page => {
-  config.entry[page] = path.join(PageSrc, page, `${page}.js`)
+  const { name } = page;
+  config.entry[name] = `./pages/${name}.js`
   config.plugins.push(
     new HtmlWebpackPlugin({
       inject: false,
-      chunks: [page],
-      filename: path.join(PageSrc, page, `${page}.html`)
+      chunks: [name],
+      filename: `${name}.html`
     })
   )
 })
